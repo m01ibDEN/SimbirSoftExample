@@ -26,4 +26,5 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     systemProperty("useRemote", System.getProperty("useRemote", "false"))
+    systemProperty("remoteUrl", System.getProperty("remoteUrl", "http://localhost:4444/wd/hub"))
 }

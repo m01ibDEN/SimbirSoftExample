@@ -5,18 +5,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.Attach;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class MainTest {
     public static WebDriver driver;
-    public String BaseUrl = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login";
-    public static final String GRID_HUB_URL = "http://192.168.1.112:4444/wd/hub";
+    public static WebDriverWait wait;
+    public final String BaseUrl = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login";
 
     public void setUp(boolean useRemote) throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -24,20 +26,19 @@ public class MainTest {
         capabilities.setPlatform(Platform.LINUX);
 
         if (useRemote) {
-            driver = new RemoteWebDriver(new URL(GRID_HUB_URL), capabilities);
+            driver = new RemoteWebDriver(new URL(System.getProperty("remoteUrl")), capabilities);
         } else {
-            System.setProperty("webdriver.chrome.driver", "/home/ten0l/drivers/chromedriver");
-            driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            driver = new ChromeDriver(options);
         }
         driver.manage().window().maximize();
         driver.get(BaseUrl);
-
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @BeforeEach
     void init() throws MalformedURLException {
         setUp(Boolean.parseBoolean(System.getProperty("useRemote", "false")));
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
     @AfterEach
     void addAttachments() {

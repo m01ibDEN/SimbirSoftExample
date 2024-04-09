@@ -1,10 +1,12 @@
 package pages;
 
 import com.opencsv.CSVWriter;
+import main.MainTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.DateTimeHelper;
 
 import java.io.FileWriter;
@@ -39,27 +41,27 @@ public class Transaction {
     }
 
     public String getTimeCredit() {
-        return timeCredit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(timeCredit)).getText();
     }
 
     public String getTimeDebit() {
-        return timeDebit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(timeDebit)).getText();
     }
 
     public String getAmountCredit() {
-        return amountCredit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(amountCredit)).getText();
     }
 
     public String getAmountDebit() {
-        return amountDebit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(amountDebit)).getText();
     }
 
     public String getTypeCredit() {
-        return typeCredit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(typeCredit)).getText();
     }
 
     public String getTypeDebit() {
-        return typeDebit.getText();
+        return MainTest.wait.until(ExpectedConditions.visibilityOf(typeDebit)).getText();
     }
 
     public List<String> getTransactionsList() {
@@ -81,7 +83,7 @@ public class Transaction {
         return dateList;
     }
 
-    public void saveToFile(List<String> data, String filePath) {
+    public Transaction saveToFile(List<String> data, String filePath) {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
             for (String line : data) {
                 String[] values = line.split(" ");
@@ -90,10 +92,12 @@ public class Transaction {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
-    public void performTransactionActions(String file) {
+    public Transaction performTransactionActions(String file) {
         List<String> transactionsList = getTransactionsList();
         saveToFile(transactionsList, "src/test/resources/" + file);
+        return this;
     }
 }
